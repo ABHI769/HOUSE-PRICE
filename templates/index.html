@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Price Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="page-bg"></div>
+
+    <header class="header">
+        <div class="logo">
+            <span class="logo-icon">🏠</span>
+            <div>
+                <h1>HomeValue</h1>
+                <p>AI-powered house price estimation</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="card form-card">
+            <h2>Property Details</h2>
+            <p class="subtitle">Enter your property information to get an estimated market price.</p>
+
+            <form id="predictForm">
+                <div class="form-grid">
+                    <div class="field">
+                        <label for="area_sqft">Area (sq ft)</label>
+                        <input type="number" id="area_sqft" name="area_sqft" min="200" max="10000" value="1200" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="bedrooms">Bedrooms</label>
+                        <input type="number" id="bedrooms" name="bedrooms" min="1" max="10" value="3" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="bathrooms">Bathrooms</label>
+                        <input type="number" id="bathrooms" name="bathrooms" min="1" max="10" value="2" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="age_years">Property Age (years)</label>
+                        <input type="number" id="age_years" name="age_years" min="0" max="100" value="5" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="floor">Floor Number</label>
+                        <input type="number" id="floor" name="floor" min="0" max="50" value="4" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="total_floors">Total Floors in Building</label>
+                        <input type="number" id="total_floors" name="total_floors" min="1" max="50" value="12" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="parking">Parking Spaces</label>
+                        <input type="number" id="parking" name="parking" min="0" max="5" value="1" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="city_tier">City Tier</label>
+                        <select id="city_tier" name="city_tier" required>
+                            {% for tier in city_tiers %}
+                            <option value="{{ tier }}" {% if tier == 'tier1' %}selected{% endif %}>{{ tier | replace('_', ' ') | title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="property_type">Property Type</label>
+                        <select id="property_type" name="property_type" required>
+                            {% for ptype in property_types %}
+                            <option value="{{ ptype }}" {% if ptype == 'apartment' %}selected{% endif %}>{{ ptype | replace('_', ' ') | title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="furnishing">Furnishing</label>
+                        <select id="furnishing" name="furnishing" required>
+                            {% for option in furnishing_options %}
+                            <option value="{{ option }}" {% if option == 'semi' %}selected{% endif %}>{{ option | replace('_', ' ') | title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="field currency-field">
+                        <label for="currency">Display Currency</label>
+                        <select id="currency" name="currency" required>
+                            {% for curr in currencies %}
+                            <option value="{{ curr.code }}" {% if curr.code == 'INR' %}selected{% endif %}>
+                                {{ curr.symbol }} {{ curr.code }} — {{ curr.name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" id="submitBtn">
+                    <span class="btn-text">Estimate Price</span>
+                    <span class="btn-loader hidden"></span>
+                </button>
+            </form>
+        </section>
+
+        <section class="card result-card hidden" id="resultCard">
+            <div class="result-header">
+                <span class="result-badge">Estimated Value</span>
+                <h2 id="formattedPrice">—</h2>
+                <p class="inr-equivalent" id="inrEquivalent"></p>
+            </div>
+
+            <div class="result-details">
+                <div class="detail-item">
+                    <span class="detail-label">Currency</span>
+                    <span class="detail-value" id="resultCurrency">—</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Price (INR)</span>
+                    <span class="detail-value" id="resultInr">—</span>
+                </div>
+            </div>
+
+            <p class="disclaimer">
+                This is an AI estimate based on property features. Actual market prices may vary by location, amenities, and market conditions.
+            </p>
+        </section>
+
+        <section class="card error-card hidden" id="errorCard">
+            <p id="errorMessage"></p>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>Model trained on synthetic Indian housing data · Base currency: INR</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

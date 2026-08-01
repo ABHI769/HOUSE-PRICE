@@ -1,0 +1,48 @@
+{
+  "feature_cols": [
+    "area_sqft",
+    "bedrooms",
+    "bathrooms",
+    "age_years",
+    "floor",
+    "total_floors",
+    "parking",
+    "city_tier",
+    "property_type",
+    "furnishing"
+  ],
+  "categorical_cols": [
+    "city_tier",
+    "property_type",
+    "furnishing"
+  ],
+  "numeric_cols": [
+    "area_sqft",
+    "bedrooms",
+    "bathrooms",
+    "age_years",
+    "floor",
+    "total_floors",
+    "parking"
+  ],
+  "city_tiers": [
+    "metro",
+    "tier1",
+    "tier2",
+    "tier3"
+  ],
+  "property_types": [
+    "apartment",
+    "villa",
+    "independent_house",
+    "studio"
+  ],
+  "furnishing_options": [
+    "unfurnished",
+    "semi",
+    "fully"
+  ],
+  "base_currency": "INR",
+  "r2_score": 0.9711,
+  "sample_count": 3000
+}
